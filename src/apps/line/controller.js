@@ -1,10 +1,13 @@
 import Marionette from 'backbone.marionette'
 
+import LineView from './view'
+
 const Line = Marionette.Object.extend({
   initialize: (options) => {
-    const view = require('./view')
-    console.log('view', view)
-  }
+    view = new LineView()
+    console.log(view)
+  },
+  getView: () => new LineView()
 })
 
 export default Line

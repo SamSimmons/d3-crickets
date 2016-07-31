@@ -4,12 +4,19 @@ import Marionette from 'backbone.marionette'
 import $ from 'jquery'
 import _ from 'lodash'
 
-import Line from './apps/line/controller'
+import './style/index.scss'
 
 const app = new Marionette.Application()
-app.on('start', () => {
-  console.log('app started')
-  Backbone.history.start()
+
+app.addRegions({
+  mainRegion: '.main'
 })
+
+const fakeData = [5, 12, 6, 3, 2, 9]
+const dataModel = new Backbone.Model(fakeData)
+
+import lineView from './apps/line/view'
+const view = new lineView({model: dataModel})
+app.mainRegion.show(view)
 
 app.start()
