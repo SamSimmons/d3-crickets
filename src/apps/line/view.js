@@ -10,15 +10,14 @@ const LineView = Marionette.ItemView.extend({
   },
   onShow: function() {
     this.setCanvasSize()
-    this.graph = this.setGraphAttributes()
-    this.renderGraph()
-    console.log(this)
+    this.graph = this.getAttributes()
+    this.renderGraph(this.graph)
   },
   setCanvasSize: function() {
     this.ui.canvas[0].setAttribute('width', this.el.clientWidth)
     this.ui.canvas[0].setAttribute('height', this.el.clientHeight)
   },
-  setGraphAttributes: function () {
+  getAttributes: function () {
     const data = _.map(this.model.toJSON())
     const margin = {
       top: 20,
@@ -28,26 +27,36 @@ const LineView = Marionette.ItemView.extend({
     }
     const width = this.el.clientWidth
     const height = this.el.clientHeight
-    const yScale = d3.scaleLinear().domain([0, d3.max(data)]).range([0, (height - margin.top - margin.bottom)])
     const xScale = d3.scaleLinear().domain([0, data.length - 1]).range([0, (width - margin.left - margin.right)])
+    const yScale = d3.scaleLinear().domain([d3.max(data), 0]).range([0, (height - margin.top - margin.bottom)])
     return { data, width, height, margin, yScale, xScale }
   },
   renderGraph: function () {
-    const { data, xScale, yScale } = this.graph
+    const { data, width, height, margin, yScale, xScale } = this.graph
 
     const line = d3.line()
       .x((d, i) => xScale(i))
-      .y(d => this.graph.height - yScale(d))
+      .y(d => yScale(d))
 
     const xAxis = d3.axisBottom().scale(xScale).ticks(data.length)
-    console.log(xAxis)
+    const yAxis = d3.axisLeft().scale(yScale)
 
-    const chart = d3.select(this.ui.canvas[0]).append('g')
+    const chart = d3.select(this.ui.canvas[0])
+    chart.append('g')
+      .attr('transform', `translate(${ margin.left }, ${margin.top})`)
       .append('path')
-      .call(xAxis)
       .attr('d', line(data))
       .style('stroke', 'grey')
       .style('fill', 'none')
+
+    chart.append('g')
+      .attr('transform', `translate(${margin.left}, ${height - margin.bottom})`)
+      .call(xAxis)
+
+    chart.append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`)
+      .call(yAxis)
+
   }
 })
 
