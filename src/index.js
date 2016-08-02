@@ -15,8 +15,10 @@ app.addRegions({
 const fakeData = [5, 12, 6, 3, 2, 9]
 const dataModel = new Backbone.Model(fakeData)
 
-import lineView from './apps/line/view'
-const view = new lineView({model: dataModel})
+import LineView from './apps/line/view'
+import BarView from './apps/bar/view'
+// const view = new LineView({model: dataModel})
+const view = new BarView({model: dataModel})
 app.mainRegion.show(view)
 
 app.start()
