@@ -17,8 +17,12 @@ const dataModel = new Backbone.Model(fakeData)
 
 import LineView from './apps/line/view'
 import BarView from './apps/bar/view'
+import ProbabilityView from './apps/probability/view'
+
 // const view = new LineView({model: dataModel})
-const view = new BarView({model: dataModel})
+// const view = new BarView({model: dataModel})
+const view = new ProbabilityView({model: dataModel})
+
 app.mainRegion.show(view)
 
 app.start()
